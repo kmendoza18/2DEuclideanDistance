@@ -8,8 +8,10 @@
  *  Version:  1.0.0
  *
  *  Version History:
- *      - 1.0.0 - Basic code and calculations
- *      - 1.0.1 - Formatting fixes and documentation
+ *      - 1.0.0 -   Basic code and calculations
+ *      - 1.0.1 -   Formatting fixes and documentation
+ *      - 2.0.0 -   Emphasizing functional decomposition and added support for
+ *                  multiple point calculations
  **/
 
  /**
@@ -18,25 +20,55 @@
 
 #include <iostream>
 #include <stdlib.h>
+#include <vector>
 #include <math.h>
 
 using namespace std;
 
 /* Function Declarations */
+void userInput(int, vector<int>&, vector<double>&, vector<double>&);
 double calculation(double, double, double, double);
 
 int main(void)
 {
-    double x1, x2, y1, y2;
+    int numPoints = 0;
+    vector<int> point;
+    vector<double> x;
+    vector<double> y;
 
-    cout << "\nPlease enter coordiantes for point 1 (x1 y1): " << endl;
-    cin >> x1 >> y1;
+    cout << "\nPlease enter number of points: " << endl;
+    cin >> numPoints;
 
-    cout << "\nPlease enter coordinates for point 2 (x2 y2): " << endl;
-    cin >> x2 >> y2;
+    userInput(numPoints, point, x, y);
 
-    cout << "\nEuclidean Distance: " << endl;
-    cout << calculation(x1, y1, x2, y2) << endl;
+    return 0;
+}
+
+/**
+ *  Function to retrieve user input
+ *
+ *  @param  -   numPoints: number of coordinates to calculate
+ *              point: pointer to the description of the coordinate (point #)
+ *              x: pointer to a vector of X-coordinates
+ *              y: pointer to a vector of Y-Coordinates
+ *
+ *  @return -   None. Pass by reference
+ **/
+void userInput(int numPoints, vector<int> &point, vector<double> &x,
+    vector<double> &y)
+{
+    double tempX = 0;
+    double tempY = 0;
+
+    for (int i = 0; i < numPoints; i++)
+    {
+        cout << "\nPlease enter coordiantes for point " << i + 1 << " (x y): "
+            << endl;
+        cin >> tempX >> tempY;
+        point.push_back(i);
+        x.push_back(tempX);
+        y.push_back(tempY);
+    }
 }
 
 /**
