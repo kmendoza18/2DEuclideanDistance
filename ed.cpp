@@ -3,16 +3,26 @@
  *
  *  Author:   Kevin Mendoza <kpmendoza@yahoo.com>
  *
- *  Purpose:  Simple program to calculate Euclidean Distance in a 2D plane
+ *  Purpose:  Simple program to calculate Euclidean Distance in a 2D plane. Will
+ *            add more functionality as time passes.
  *
- *  Version:  2.0.1
+ *  Version:  3.0.0
  *
  *  Version History:
  *      - 1.0.0 -   Basic code and calculations
  *      - 1.0.1 -   Formatting fixes and documentation
  *      - 2.0.0 -   Emphasizing functional decomposition and added support for
  *                  multiple point calculations
- *      - 2.0.1 -   More functional decomposition. Fixed errors in description
+ *      - 2.0.1 -   More functional decomposition. Fixed errors in description.
+ *                  Added doccumentation to functions. Changes to functionality.
+ *      - 3.0.0 -   Added Menu for user choices as well as code to calculate
+ *                  distances touching all points
+ *
+ *  Future Plans:
+ *  -   Find longest/shortest distance between all points in
+ *      descending/ascending order?
+ *  -   Add to readme
+ *  -   More functions/purpose
  **/
 
  /**
@@ -21,45 +31,100 @@
 
 #include <iostream>
 #include <stdlib.h>
+#include <float.h>
 #include <vector>
 #include <math.h>
 
 using namespace std;
 
+#define MAX DBL_MAX
+
 /* Function Declarations */
-void userInput(int, vector<double>&, vector<double>&);
-void compare(int, vector<double>, vector<double>, int&, int&, double&);
+int menu();
+void userInput(int&);
+void coordinates(int, vector<double>&, vector<double>&);
+void compare(int, int, vector<double>, vector<double>, int&, int&, double&);
 double calculation(double, double, double, double);
 bool inputValidation(int);
 void output(int, int, double);
 
 int main(void)
 {
+    /* Local Variable Declarations */
     int numPoints = 0;
     int pt1, pt2;
+    int choice = menu();
     double distance;
     vector<double> x;
     vector<double> y;
 
-    cout << "\nPlease enter number of points: " << endl;
-    cin >> numPoints;
-
-    if (!inputValidation(numPoints))
+    switch ( choice )
     {
-        return 0;
+        case 1: {
+            userInput(numPoints);
+            coordinates(numPoints, x, y);
+            compare(numPoints, choice, x, y, pt1, pt2, distance);
+            output(pt1, pt2, distance);
+            break;
+        }
+        case 2: {
+            userInput(numPoints);
+            coordinates(numPoints, x, y);
+            compare(numPoints, choice, x, y, pt1, pt2, distance);
+            output(pt1, pt2, distance);
+            break;
+        }
+        case 0: {
+            cout << "\nClosing Program..." << endl;
+            break;
+        }
     }
-
-    userInput(numPoints, x, y);
-
-    compare(numPoints, x, y, pt1, pt2, distance);
-
-    output(pt1, pt2, distance);
 
     return 0;
 }
 
 /**
- *  Function to retrieve user input
+ *  Function that outputs tasks for user to choose from
+ *
+ *  @return -   Operation choice (integer)
+ **/
+int menu()
+{
+    int choice = 0;
+
+    cout << endl;
+    cout << "Please enter your choice of task: " << endl;
+    cout << "1) Shortest Distance Calculator (Direct)" << endl;
+    cout << "2) Longest Distance Calculator (Direct)" << endl;
+    cout << "0) Exit Program" << endl;
+    cout << endl;
+    cout << "Choice:" << endl;
+    cin >> choice;
+
+    return choice;
+}
+
+/**
+ *  Function that retrieves any user input
+ *
+ *  @param  -   numPoints: number of coordinates to calculate
+ *
+ *  @return -   None. Pass by reference
+ **/
+void userInput(int &numPoints)
+{
+    cout << "\nPlease enter number of points: " << endl;
+    cin >> numPoints;
+
+    if (!inputValidation(numPoints))
+    {
+        exit(0);
+        cout << "NULL" << endl; // Makes Sure of Full Exit
+    }
+}
+
+/**
+ *  Function to retrieve coordinates for points on 2D plane
  *
  *  @param  -   numPoints: number of coordinates to calculate
  *              point: pointer to the description of the coordinate (point #)
@@ -68,7 +133,7 @@ int main(void)
  *
  *  @return -   None. Pass by reference
  **/
-void userInput(int numPoints, vector<double> &x, vector<double> &y)
+void coordinates(int numPoints, vector<double> &x, vector<double> &y)
 {
     double tempX = 0;
     double tempY = 0;
@@ -95,13 +160,22 @@ void userInput(int numPoints, vector<double> &x, vector<double> &y)
  *              pt2: second point in longest distance pair
  *              distance: distance between pt1 & pt2
  *
- *  @return -   Returns points of greatest distance and distance value
+ *  @return -   Returns points of shortest/longest distance and distance value
  **/
-void compare(int numPoints, vector<double> x, vector<double> y, int &pt1,
-    int &pt2, double &distance)
+void compare(int numPoints, int choice, vector<double> x, vector<double> y,
+    int &pt1, int &pt2, double &distance)
 {
-    double prevCalc = 0;
+    double prevCalc;
     double temp = 0;
+
+    if (choice == 1)
+    {
+        prevCalc = MAX;
+    }
+    else
+    {
+        prevCalc = 0;
+    }
 
     for (int i = 0; i < numPoints; i++)
     {
@@ -111,7 +185,17 @@ void compare(int numPoints, vector<double> x, vector<double> y, int &pt1,
             cout << "Distance from point " << i + 1 << " to point " << j + 1 <<
                 ": " << temp << endl;
 
-            if (temp > prevCalc)
+            /* Shortest Distance */
+            if (temp < prevCalc && choice == 1)
+            {
+                prevCalc = temp;
+                pt1 = i;
+                pt2 = j;
+                distance = temp;
+            }
+
+            /* Longest Distance */
+            if (temp > prevCalc && choice == 2)
             {
                 prevCalc = temp;
                 pt1 = i;
@@ -139,6 +223,13 @@ double calculation(double x1, double y1, double x2, double y2)
     return sqrt( pow( (x1 - x2), 2 ) + pow( (y1 - y2), 2 ) );
 }
 
+/**
+ *  Function that determines if user input is valid
+ *
+ *  @param  -   numPoints: number of points
+ *
+ *  @return -   Returns true if input is valid, otherwase returns false
+ **/
 bool inputValidation(int numPoints)
 {
     switch (numPoints)
@@ -156,9 +247,18 @@ bool inputValidation(int numPoints)
     return 1;
 }
 
+/**
+ *  Function that outputs results
+ *
+ *  @param  -   pt1:        first point in pair
+ *              pt2:        second point in pair
+ *              distance:   distance from point 1 to point 2
+ *
+ *  @return -   VOID
+ **/
 void output(int pt1, int pt2, double distance)
 {
-    cout << "The greatest distance between two points is from point " << pt1 + 1
+    cout << "The shortest distance between two points is from point " << pt1 + 1
         << " to point " << pt2 + 1 << " with a distance of " << distance
         << endl;
 }
