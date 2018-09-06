@@ -5,13 +5,14 @@
  *
  *  Purpose:  Simple program to calculate Euclidean Distance in a 2D plane
  *
- *  Version:  1.0.0
+ *  Version:  2.0.1
  *
  *  Version History:
  *      - 1.0.0 -   Basic code and calculations
  *      - 1.0.1 -   Formatting fixes and documentation
  *      - 2.0.0 -   Emphasizing functional decomposition and added support for
  *                  multiple point calculations
+ *      - 2.0.1 -   More functional decomposition. Fixed errors in description
  **/
 
  /**
@@ -29,6 +30,8 @@ using namespace std;
 void userInput(int, vector<double>&, vector<double>&);
 void compare(int, vector<double>, vector<double>, int&, int&, double&);
 double calculation(double, double, double, double);
+bool inputValidation(int);
+void output(int, int, double);
 
 int main(void)
 {
@@ -41,25 +44,16 @@ int main(void)
     cout << "\nPlease enter number of points: " << endl;
     cin >> numPoints;
 
-    switch (numPoints)
+    if (!inputValidation(numPoints))
     {
-        case 0: {
-            cout << "No points? No distance." << endl;
-            return 0;
-        }
-        case 1: {
-            cout << "One point? Distance is 0." << endl;
-            return 0;
-        }
+        return 0;
     }
 
     userInput(numPoints, x, y);
 
     compare(numPoints, x, y, pt1, pt2, distance);
 
-    cout << "The greatest distance between two points is from point " << pt1 + 1
-        << " to point " << pt2 + 1 << " with a distance of " << distance
-        << endl;
+    output(pt1, pt2, distance);
 
     return 0;
 }
@@ -143,4 +137,28 @@ void compare(int numPoints, vector<double> x, vector<double> y, int &pt1,
 double calculation(double x1, double y1, double x2, double y2)
 {
     return sqrt( pow( (x1 - x2), 2 ) + pow( (y1 - y2), 2 ) );
+}
+
+bool inputValidation(int numPoints)
+{
+    switch (numPoints)
+    {
+        case 0: {
+            cout << "No points? No distance." << endl;
+            return 0;
+        }
+        case 1: {
+            cout << "One point? Distance is 0." << endl;
+            return 0;
+        }
+    }
+
+    return 1;
+}
+
+void output(int pt1, int pt2, double distance)
+{
+    cout << "The greatest distance between two points is from point " << pt1 + 1
+        << " to point " << pt2 + 1 << " with a distance of " << distance
+        << endl;
 }
