@@ -26,20 +26,40 @@
 using namespace std;
 
 /* Function Declarations */
-void userInput(int, vector<int>&, vector<double>&, vector<double>&);
+void userInput(int, vector<double>&, vector<double>&);
+void compare(int, vector<double>, vector<double>, int&, int&, double&);
 double calculation(double, double, double, double);
 
 int main(void)
 {
     int numPoints = 0;
-    vector<int> point;
+    int pt1, pt2;
+    double distance;
     vector<double> x;
     vector<double> y;
 
     cout << "\nPlease enter number of points: " << endl;
     cin >> numPoints;
 
-    userInput(numPoints, point, x, y);
+    switch (numPoints)
+    {
+        case 0: {
+            cout << "No points? No distance." << endl;
+            return 0;
+        }
+        case 1: {
+            cout << "One point? Distance is 0." << endl;
+            return 0;
+        }
+    }
+
+    userInput(numPoints, x, y);
+
+    compare(numPoints, x, y, pt1, pt2, distance);
+
+    cout << "The greatest distance between two points is from point " << pt1 + 1
+        << " to point " << pt2 + 1 << " with a distance of " << distance
+        << endl;
 
     return 0;
 }
@@ -54,8 +74,7 @@ int main(void)
  *
  *  @return -   None. Pass by reference
  **/
-void userInput(int numPoints, vector<int> &point, vector<double> &x,
-    vector<double> &y)
+void userInput(int numPoints, vector<double> &x, vector<double> &y)
 {
     double tempX = 0;
     double tempY = 0;
@@ -65,10 +84,50 @@ void userInput(int numPoints, vector<int> &point, vector<double> &x,
         cout << "\nPlease enter coordiantes for point " << i + 1 << " (x y): "
             << endl;
         cin >> tempX >> tempY;
-        point.push_back(i);
         x.push_back(tempX);
         y.push_back(tempY);
     }
+
+    cout << endl;
+}
+
+/**
+ *  Function that compares distances between sets of points
+ *
+ *  @param  -   numPoints: number of points
+ *              x: vector containing x coords for all points
+ *              y: vector containing y coords for all points
+ *              pt1: first point in longest distance pair
+ *              pt2: second point in longest distance pair
+ *              distance: distance between pt1 & pt2
+ *
+ *  @return -   Returns points of greatest distance and distance value
+ **/
+void compare(int numPoints, vector<double> x, vector<double> y, int &pt1,
+    int &pt2, double &distance)
+{
+    double prevCalc = 0;
+    double temp = 0;
+
+    for (int i = 0; i < numPoints; i++)
+    {
+        for (int j = i + 1; j < numPoints; j++)
+        {
+            temp = calculation( x.at(i), y.at(i), x.at(j), y.at(j) );
+            cout << "Distance from point " << i + 1 << " to point " << j + 1 <<
+                ": " << temp << endl;
+
+            if (temp > prevCalc)
+            {
+                prevCalc = temp;
+                pt1 = i;
+                pt2 = j;
+                distance = temp;
+            }
+        }
+    }
+
+    cout << endl;
 }
 
 /**
