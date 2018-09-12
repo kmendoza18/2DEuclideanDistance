@@ -4,7 +4,8 @@
  *  Author:   Kevin Mendoza <kpmendoza@yahoo.com>
  *
  *  Purpose:  Simple program to calculate Euclidean Distance in a 2D plane. Will
- *            add more functionality as time passes.
+ *            add more functionality as time passes. As of 09/12/2018, program
+ *            will be put on hiatus to focus on other projects.
  *
  *  Version:  3.0.0
  *
@@ -46,7 +47,7 @@ void coordinates(int, vector<double>&, vector<double>&);
 void compare(int, int, vector<double>, vector<double>, int&, int&, double&);
 double calculation(double, double, double, double);
 bool inputValidation(int);
-void output(int, int, double);
+void output(int, int, int, double);
 
 int main(void)
 {
@@ -64,14 +65,14 @@ int main(void)
             userInput(numPoints);
             coordinates(numPoints, x, y);
             compare(numPoints, choice, x, y, pt1, pt2, distance);
-            output(pt1, pt2, distance);
+            output(choice, pt1, pt2, distance);
             break;
         }
         case 2: {
             userInput(numPoints);
             coordinates(numPoints, x, y);
             compare(numPoints, choice, x, y, pt1, pt2, distance);
-            output(pt1, pt2, distance);
+            output(choice, pt1, pt2, distance);
             break;
         }
         case 0: {
@@ -165,16 +166,12 @@ void coordinates(int numPoints, vector<double> &x, vector<double> &y)
 void compare(int numPoints, int choice, vector<double> x, vector<double> y,
     int &pt1, int &pt2, double &distance)
 {
-    double prevCalc;
+    double prevCalc = 0;
     double temp = 0;
 
     if (choice == 1)
     {
         prevCalc = MAX;
-    }
-    else
-    {
-        prevCalc = 0;
     }
 
     for (int i = 0; i < numPoints; i++)
@@ -256,9 +253,18 @@ bool inputValidation(int numPoints)
  *
  *  @return -   VOID
  **/
-void output(int pt1, int pt2, double distance)
+void output(int choice, int pt1, int pt2, double distance)
 {
-    cout << "The shortest distance between two points is from point " << pt1 + 1
-        << " to point " << pt2 + 1 << " with a distance of " << distance
-        << endl;
+    if ( choice == 1 )
+    {
+        cout << "The shortest distance between two points is from point " <<
+            pt1 + 1 << " to point " << pt2 + 1 << " with a distance of " <<
+            distance << endl;
+    }
+    else
+    {
+        cout << "The longest distance between two points is from point " <<
+            pt1 + 1 << " to point " << pt2 + 1 << " with a distance of " <<
+            distance << endl;
+    }
 }
