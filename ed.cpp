@@ -27,7 +27,7 @@
  **/
 
  /**
-  * Included libraries, definitions, and function declarations
+  * Included libraries, definitions, and function declarations.
   **/
 
 #include <iostream>
